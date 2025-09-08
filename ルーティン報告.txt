@@ -12,8 +12,8 @@
   <script src="https://static.line-scdn.net/liff/2.22.0/liff.js"></script>
   <script>
     // ⚠️LIFF IDとGASのURLをここに貼り付けてください
-    const liffId = "あなたのLIFF ID"; // 例: 1234567890-abcdefgh
-    const gasUrl = "https://script.google.com/macros/s/.../exec";
+    const liffId = "2005913333-LlM546E8"; // 例: 1234567890-abcdefgh
+    const gasUrl = "https://script.google.com/macros/s/AKfycbyNT9n65Ouw1wz-9N4lfQysqTimVfgnPfphEIiOuxhOIDOtLeizhIDdHXu8xLEaBcnN/exec";
 
     // LIFFアプリの初期化
     async function initializeLiff() {
