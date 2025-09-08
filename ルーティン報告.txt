@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LINE ID記録アプリ</title>
+</head>
+<body>
+  <h1>LINE IDを記録中...</h1>
+  <p id="status-message">処理中です。しばらくお待ちください。</p>
+
+  <script src="https://static.line-scdn.net/liff/2.22.0/liff.js"></script>
+  <script>
+    // ⚠️LIFF IDとGASのURLをここに貼り付けてください
+    const liffId = "あなたのLIFF ID"; // 例: 1234567890-abcdefgh
+    const gasUrl = "https://script.google.com/macros/s/.../exec";
+
+    // LIFFアプリの初期化
+    async function initializeLiff() {
+      try {
+        await liff.init({ liffId: liffId });
+        console.log("LIFF初期化完了");
+        
+        // ユーザーがログインしているか確認
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        } else {
+          sendLineIdToGAS();
+        }
+        
+      } catch (err) {
+        console.error("LIFF初期化失敗", err);
+        document.getElementById("status-message").textContent = "エラーが発生しました。LIFF IDを確認してください。";
+      }
+    }
+
+    // GASにLINE IDを送信する関数
+    async function sendLineIdToGAS() {
+      try {
+        // LINE IDを取得
+        const profile = await liff.getProfile();
+        const lineId = profile.userId;
+
+        console.log("ユーザーID:", lineId);
+        
+        // GASのURLにLINE IDをパラメータとして追加
+        const url = `${gasUrl}?line_id=${encodeURIComponent(lineId)}`;
+        console.log("GASへの送信URL:", url);
+
+        // GASにGETリクエストを送信
+        const response = await fetch(url);
+        const text = await response.text();
+
+        console.log("GASからのレスポンス:", text);
+        
+        if (response.ok) {
+          document.getElementById("status-message").textContent = "LINE IDの記録が完了しました！";
+          // 処理が完了したらLIFFアプリを閉じる
+          liff.closeWindow();
+        } else {
+          document.getElementById("status-message").textContent = "GASへの送信に失敗しました。";
+        }
+      } catch (err) {
+        console.error("GASへの送信失敗", err);
+        document.getElementById("status-message").textContent = "エラーが発生しました。";
+      }
+    }
+
+    // アプリ実行
+    initializeLiff();
+  </script>
+</body>
+</html>
